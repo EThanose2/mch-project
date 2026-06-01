@@ -1,5 +1,7 @@
 Washing Machine Controller Simulation
+
 Introduction
+
 Dự án này mô phỏng hệ thống điều khiển máy giặt sử dụng vi điều khiển AT89C51. Hệ thống được thiết kế hướng tới sự ổn định và dễ bảo trì, ứng dụng kiến trúc Máy trạng thái hữu hạn (Finite State Machine - FSM) để quản lý các chu trình giặt, thao tác người dùng và các cơ chế an toàn. Quá trình mô phỏng được thực hiện trên phần mềm Proteus, với mã nguồn C được biên dịch ra file hex.
 Features
 Dự án cung cấp các tính năng cốt lõi của một chiếc máy giặt tự động, cho phép cấu hình linh hoạt thông qua các nút nhấn điều khiển:
