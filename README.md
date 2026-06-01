@@ -274,4 +274,3 @@ Project developed as part of a microcontroller-based embedded systems course usi
 * Embedded C Programming
 * Finite State Machine (FSM) Design
 
-```
