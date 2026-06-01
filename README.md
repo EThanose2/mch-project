@@ -1,12 +1,278 @@
-Washing Machine Controller Simulation
+# Washing Machine Controller Simulation
 
-Introduction
+## Introduction
 
-Dự án này mô phỏng hệ thống điều khiển máy giặt sử dụng vi điều khiển AT89C51. Hệ thống được thiết kế hướng tới sự ổn định và dễ bảo trì, ứng dụng kiến trúc Máy trạng thái hữu hạn (Finite State Machine - FSM) để quản lý các chu trình giặt, thao tác người dùng và các cơ chế an toàn. Quá trình mô phỏng được thực hiện trên phần mềm Proteus, với mã nguồn C được biên dịch ra file hex.
-Features
-Dự án cung cấp các tính năng cốt lõi của một chiếc máy giặt tự động, cho phép cấu hình linh hoạt thông qua các nút nhấn điều khiển:
-Chức năng Thiết lập Chế độ Giặt (Chọn Mode): Sử dụng nút nhấn BM (P3.2) ở trạng thái chờ (IDLE) để chọn chu trình phù hợp với từng loại vải.
-Chức năng Thiết lập Mức Nước (Water Level): Sử dụng nút nhấn BW (P3.3) ở trạng thái chờ (IDLE) để điều chỉnh lượng nước cấp vào lồng giặt.
-Quản lý Chu trình Giặt Tự động (FSM Control): Kích hoạt bằng nút BS (P3.0). Hệ thống tự động tính toán tổng thời gian (T) và chạy tuần tự qua các bước: Cấp nước, Giặt, Xả, Giũ, và Vắt mà không cần can thiệp thêm.
-Chức năng Tạm dừng và Khôi phục (Pause / Resume): Nút BP (P3.1) cho phép đóng băng thời gian, ngắt toàn bộ động cơ/van lập tức để đảm bảo an toàn, đồng thời nhấp nháy LED trạng thái và chữ "PAUSED" trên LCD. Nhấn lại để tiếp tục tiến trình.
-Washing Modes & Water LevelsBảng Chế độ giặt (Wash Modes)Chế độMã hiển thịChi tiết chu trìnhCottonCtChế độ giặt kỹ nhất, lâu nhất với số lần giũ nhiều nhất (3 lần).SyntheticSyThời gian giặt trung bình, giũ 2 lần (dành cho đồ tổng hợp).DelicateDeThời gian ngắn, giũ 2 lần, động cơ quay nhẹ nhàng hơn (đồ mỏng/lụa).QuickQkThời gian tối ưu ngắn nhất, chỉ giũ 1 lần để tiết kiệm điện nước.Bảng Mức nước (Water Levels)Mức nướcMã hiển thịThời gian mở van cấp nướcLowLo3 giâyMediumMd5 giâyHighHi8 giâyHardware ArchitectureVi điều khiển: AT89C51Hiển thị: Màn hình LCD 16x2 (Hiển thị thời gian đếm ngược, chế độ, mức nước và trạng thái Pause).Cơ cấu chấp hành (Actuators):Động cơ DC (MO - Lồng giặt): Đảo chiều liên tục mỗi 1 giây trong lúc giặt, hoặc quay tốc độ cao khi vắt.Van nước (VA): Đóng/mở để cấp nước (FILLING, RINSING) hoặc xả nước (DRAINING, SPINNING).Hệ thống LED chỉ thị: Báo trạng thái hoạt động (LF: Filling, LW: Washing, LR: Rinsing, LS: Spinning).Cảm biến & Đầu vào (Sensors & Inputs):P3.0 (BS): Nút Bắt đầu (Start).P3.1 (BP): Nút Tạm dừng / Tiếp tục (Pause/Resume).P3.2 (BM): Nút chọn Chế độ (Mode).P3.3 (BW): Nút chọn Mức nước (Water).Software DesignFirmware được viết bằng ngôn ngữ C (src.c) và biên dịch ra mã máy (src.hex). Các mô hình thiết kế chính bao gồm:Finite State Machine (FSM): Logic cốt lõi để chuyển đổi mượt mà giữa các trạng thái IDLE ➔ FILLING ➔ WASHING ➔ DRAINING ➔ RINSING ➔ SPINNING dựa trên bộ đếm thời gian.Hardware Abstraction: Tách biệt rõ ràng các định nghĩa chân tín hiệu phần cứng (P3.x, các chân kích Motor/Van) khỏi thuật toán điều khiển logic.Safety Interlocks: Chế độ tạm dừng can thiệp trực tiếp vào việc cấp điện cho tải (Motor, Valve) để dừng hệ thống ngay lập tức khi người dùng yêu cầu.Installation and UsageYêu cầu phần mềm:Phần mềm lập trình C cho họ 8051 (ví dụ: Keil C) để xem hoặc chỉnh sửa src.c.Proteus Design Suite để chạy mô phỏng.Hướng dẫn mô phỏng:Mở file doanTKLL.pdsprj trong phần mềm Proteus.Click đúp vào linh kiện vi điều khiển AT89C51 trên bản vẽ schematic.Ở mục Program File, trỏ đường dẫn tới file src.hex đã được cung cấp.Nhấn nút Play ở góc dưới bên trái màn hình Proteus để bắt đầu chạy mô phỏng. (Bạn có thể xem trước file DEMO.mp4 để hình dung cách hệ thống hoạt động hoặc tham khảo presentation.pptx cho các slide báo cáo).Cách thức vận hành:Sử dụng nút BM (P3.2) và BW (P3.3) để thiết lập Mode và Mức nước mong muốn trên màn hình LCD.Nhấn nút BS (P3.0) để máy bắt đầu chu trình chạy tự động. Quan sát các LED LF, LW, LR, LS và hoạt động của Motor/Valve.Trong lúc máy đang chạy, nhấn BP (P3.1) để test tính năng tạm dừng (đèn chớp, động cơ dừng), nhấn lại lần nữa để hệ thống tiếp tục chu trình đang dang dở.
+This project simulates an automatic washing machine controller using the **AT89C51 microcontroller**.
+
+The system is designed for reliability and maintainability by applying a **Finite State Machine (FSM)** architecture to manage washing cycles, user interactions, and safety mechanisms.
+
+The simulation is implemented in **Proteus Design Suite**, while the firmware is written in **C** and compiled into a `.hex` file for execution on the AT89C51.
+
+---
+
+## Features
+
+### 🔹 Wash Mode Selection
+
+Use the **BM button (P3.2)** while the machine is in the **IDLE** state to select the appropriate washing program.
+
+### 🔹 Water Level Selection
+
+Use the **BW button (P3.3)** while in **IDLE** to configure the desired water level.
+
+### 🔹 Automatic Washing Cycle (FSM Control)
+
+Press the **BS button (P3.0)** to start the washing process.
+
+The controller automatically calculates the total cycle time and sequentially executes:
+
+1. Filling
+2. Washing
+3. Draining
+4. Rinsing
+5. Spinning
+
+No further user intervention is required.
+
+### 🔹 Pause / Resume Function
+
+The **BP button (P3.1)** allows the cycle to be paused and resumed.
+
+When paused:
+
+* Countdown timer freezes.
+* Motor and valve outputs are disabled immediately.
+* Status LED blinks.
+* LCD displays **"PAUSED"**.
+
+Press the button again to continue from the same point in the cycle.
+
+---
+
+# Washing Modes & Water Levels
+
+## Wash Modes
+
+| Mode      | Display Code | Description                                               |
+| --------- | ------------ | --------------------------------------------------------- |
+| Cotton    | Ct           | Longest and most intensive wash cycle with 3 rinse cycles |
+| Synthetic | Sy           | Medium wash duration with 2 rinse cycles                  |
+| Delicate  | De           | Gentle washing for delicate fabrics with 2 rinse cycles   |
+| Quick     | Qk           | Shortest cycle with only 1 rinse cycle                    |
+
+## Water Levels
+
+| Water Level | Display Code | Valve Open Time |
+| ----------- | ------------ | --------------- |
+| Low         | Lo           | 3 seconds       |
+| Medium      | Md           | 5 seconds       |
+| High        | Hi           | 8 seconds       |
+
+---
+
+# Hardware Architecture
+
+## Microcontroller
+
+* AT89C51
+
+## Display
+
+* LCD 16x2
+
+  * Remaining time
+  * Wash mode
+  * Water level
+  * Pause status
+
+## Actuators
+
+### DC Motor (MO)
+
+* Alternates direction every second during washing.
+* Spins at high speed during spinning mode.
+
+### Water Valve (VA)
+
+Used for:
+
+* Water filling
+* Water draining
+* Rinsing operations
+
+### Status LEDs
+
+| LED | Function |
+| --- | -------- |
+| LF  | Filling  |
+| LW  | Washing  |
+| LR  | Rinsing  |
+| LS  | Spinning |
+
+## Inputs
+
+| Pin  | Button | Function              |
+| ---- | ------ | --------------------- |
+| P3.0 | BS     | Start                 |
+| P3.1 | BP     | Pause / Resume        |
+| P3.2 | BM     | Mode Selection        |
+| P3.3 | BW     | Water Level Selection |
+
+---
+
+# Software Design
+
+The firmware is written in **C (`src.c`)** and compiled into **`src.hex`**.
+
+## Finite State Machine (FSM)
+
+The controller transitions through:
+
+```text
+IDLE
+  ↓
+FILLING
+  ↓
+WASHING
+  ↓
+DRAINING
+  ↓
+RINSING
+  ↓
+SPINNING
+```
+
+State transitions are managed by timers and internal counters.
+
+## Hardware Abstraction
+
+Hardware pin definitions are separated from the application logic to improve readability and maintainability.
+
+## Safety Interlocks
+
+The pause mechanism directly disables motor and valve outputs, ensuring the machine stops immediately when requested.
+
+---
+
+# Installation and Usage
+
+## Requirements
+
+### Software
+
+* Keil C (or any compatible 8051 compiler)
+* Proteus Design Suite
+
+---
+
+## Running the Simulation
+
+### Step 1
+
+Open:
+
+```text
+doanTKLL.pdsprj
+```
+
+in Proteus.
+
+### Step 2
+
+Double-click the **AT89C51** component.
+
+### Step 3
+
+Set the **Program File** field to:
+
+```text
+src.hex
+```
+
+### Step 4
+
+Press the **Play** button in Proteus to start the simulation.
+
+Optional resources:
+
+* `DEMO.mp4` – Demonstration video
+* `presentation.pptx` – Project presentation slides
+
+---
+
+# Operation Guide
+
+### 1. Configure Settings
+
+While in IDLE state:
+
+* Press **BM (P3.2)** to select a wash mode.
+* Press **BW (P3.3)** to select a water level.
+
+The selected settings are displayed on the LCD.
+
+### 2. Start Washing
+
+Press:
+
+```text
+BS (P3.0)
+```
+
+The washing cycle starts automatically.
+
+Monitor:
+
+* LCD display
+* LEDs (LF, LW, LR, LS)
+* Motor operation
+* Water valve activity
+
+### 3. Pause / Resume
+
+During operation:
+
+Press:
+
+```text
+BP (P3.1)
+```
+
+to pause the machine.
+
+Effects:
+
+* LEDs blink.
+* Motor stops.
+* Valve closes.
+* LCD shows "PAUSED".
+
+Press **BP** again to resume from the same state.
+
+---
+
+# Project Structure
+
+```text
+.
+├── src.c
+├── src.hex
+├── doanTKLL.pdsprj
+├── DEMO.mp4
+├── presentation.pptx
+└── README.md
+```
+
+---
+
+# Authors
+
+Project developed as part of a microcontroller-based embedded systems course using:
+
+* AT89C51
+* Proteus Design Suite
+* Embedded C Programming
+* Finite State Machine (FSM) Design
+
+```
+```
